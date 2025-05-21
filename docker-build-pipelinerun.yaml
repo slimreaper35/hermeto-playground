@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: docker-build-run
+spec:
+  pipelineRef:
+    name: docker-build
+  params:
+    - name: git-url
+      value: "https://github.com/slimreaper35/konflux-test.git"
+    - name: revision
+      value: "main"
+    - name: output-image
+      value: "quay.io/redhat-user-workloads/rh-ee-msoltis-tenant/konflux-test/konflux-test"
+    - name: path-context
+      value: "."
+    - name: dockerfile
+      value: "Dockerfile"
+    - name: rebuild
+      value: "false"
+    - name: skip-checks
+      value: "false"
+    - name: hermetic
+      value: "true"
+    - name: prefetch-input
+      value: "gomod"
+    - name: image-expires-after
+      value: "1d"
+    - name: build-args
+      value: []
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
